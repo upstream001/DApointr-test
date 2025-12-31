@@ -1,10 +1,23 @@
+from models.utils import fps_subsample
+from extensions.emd.emd_module import emdModule
+from extensions.chamfer_dist import ChamferFunction
 import sys
 import torch
 sys.path.append('..')
 
-# from loss_functions import chamfer_l1, chamfer_l2, chamfer_partial_l1, chamfer_partial_l2, emd_loss
-from loss_functions import chamfer_3DDist, emdModule
-from models.utils import fps_subsample
+
+class chamfer_3DDist(torch.nn.Module):
+    """
+    3D Chamfer Distance module
+    """
+
+    def __init__(self):
+        super(chamfer_3DDist, self).__init__()
+
+    def forward(self, xyz1, xyz2):
+        dist1, dist2 = ChamferFunction.apply(xyz1, xyz2)
+        return dist1, dist2, torch.sqrt(dist1), torch.sqrt(dist2)
+
 
 class Completionloss:
     def __init__(self, loss_func='cd_l1'):
@@ -21,7 +34,8 @@ class Completionloss:
         elif loss_func == 'emd':
             self.metric = self.emd_loss
         else:
-            raise Exception('loss function {} not supported yet!'.format(loss_func))
+            raise Exception(
+                'loss function {} not supported yet!'.format(loss_func))
 
     def chamfer_l1(self, p1, p2):
         d1, d2, _, _ = self.chamfer_dist(p1, p2)
@@ -60,15 +74,12 @@ class Completionloss:
         loss_2 = self.metric(P2, gt_2)
         loss_3 = self.metric(P3, gt)
 
-        partial_matching = torch.tensor(0).cuda() if self.loss_func == 'emd' else self.partial_matching(partial, P3)
+        partial_matching = torch.tensor(
+            0).cuda() if self.loss_func == 'emd' else self.partial_matching(partial, P3)
 
         loss_all = loss_c + loss_1 + loss_2 + loss_3 + partial_matching
         losses = [partial_matching, loss_c, loss_1, loss_2, loss_3]
         return loss_all, losses
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -77,7 +88,6 @@ if __name__ == '__main__':
     p1 = torch.randn(10, 512, 3).cuda()
     p2 = torch.randn(10, 1024, 3).cuda()
     p3 = torch.randn(10, 2048, 3).cuda()
-
 
     # loss = get_loss([pc, p1, p2, p3], gt, gt, 'emd')[0]
     # print(loss.item())

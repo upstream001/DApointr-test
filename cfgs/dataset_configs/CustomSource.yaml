@@ -1,0 +1,5 @@
+NAME: CustomSourceDataset
+DATA_PATH: /home/tianqi/DAPoinTr/data/organized_source_dataset
+N_POINTS: 2048
+CLASS_CHOICE: custom
+SPLIT: train

@@ -1,0 +1,18 @@
+# PyTorch and related packages
+torch>=1.7.0
+torchvision
+timm
+numpy
+scipy
+
+# Data processing and visualization
+h5py
+open3d
+matplotlib
+opencv-python
+
+# Point cloud processing
+pointnet2_ops
+
+# Other utilities
+pyyaml

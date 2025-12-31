@@ -1,0 +1,5 @@
+NAME: CustomTargetDataset
+DATA_PATH: /home/tianqi/DAPoinTr/data/organized_target_dataset
+N_POINTS: 2048
+CLASS_CHOICE: custom
+SPLIT: train

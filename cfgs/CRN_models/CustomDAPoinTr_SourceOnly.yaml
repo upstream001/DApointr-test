@@ -1,0 +1,62 @@
+optimizer : {
+  type: Adam,
+  kwargs: {
+    lr : 0.0002, 
+    weight_decay : 0.00005,
+    betas: [0.9,0.999]
+  }
+} 
+scheduler: {
+  type: LambdaLR,
+  kwargs: {
+    decay_step: 21,
+    lr_decay: 0.76,
+    lowest_decay: 0.02  # min lr = lowest_decay * lr
+  }
+}
+bnmscheduler: {
+  type: Lambda,
+  kwargs: {
+    decay_step: 21,
+    bn_decay: 0.5,
+    bn_momentum: 0.9,
+    lowest_decay: 0.01
+  }
+}
+
+dataset : {
+  train : { _base_: cfgs/dataset_configs/CustomSource.yaml, 
+            others: {subset: 'train', bs: 1},  # 减小批次大小以避免内存问题
+            virtual_dataset: CustomSource,
+            real_dataset: CustomTarget},
+  val : { _base_: cfgs/dataset_configs/CustomSource.yaml, 
+            others: {subset: 'test', bs: 1},
+            virtual_dataset: CustomSource,
+            real_dataset: CustomTarget},
+  test : { _base_: cfgs/dataset_configs/CustomSource.yaml, 
+            others: {subset: 'test', bs: 1},
+            virtual_dataset: CustomSource,
+            real_dataset: CustomTarget}
+}
+model : {
+  NAME: DAPoinTr, 
+  num_pred: 2048, 
+  num_query: 128, 
+  knn_layer: 1, 
+  trans_dim: 384,
+  up_factors: [1,4,2],
+  num_p0: 256,
+  num_pc: 128,
+  bounding: True,
+  radius: 1.0
+}
+total_bs : 1
+step_per_update : 1
+max_epoch : 60
+pre_train_epoch: 60
+bool_source_train: True
+bool_pseudo_label_train: False
+bool_model_train: True
+
+consider_metric: cd_l1
+consider_metric_2: CDL2

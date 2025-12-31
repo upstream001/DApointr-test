@@ -1,0 +1,4 @@
+# ninja log v7
+0	12163	1766975447753784514	/home/tianqi/DAPoinTr/extensions/emd/build/temp.linux-x86_64-cpython-310/emd.o	37e91e5cd47d5fd8
+6	8169	1766975511714341692	/home/tianqi/DAPoinTr/extensions/emd/build/temp.linux-x86_64-cpython-310/emd_cuda.o	c435562d970e8c5
+5	12102	1766975511713341666	/home/tianqi/DAPoinTr/extensions/emd/build/temp.linux-x86_64-cpython-310/emd.o	237f01b7d06ac37
