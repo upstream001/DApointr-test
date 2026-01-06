@@ -52,13 +52,14 @@ def real_dataset_builder(args, config,additional_dataset = None):  #config other
     #loading data
     if config.real_dataset in ['ScanNet', 'MatterPort']:
         config.split = 'trainval'
-#    elif config.real_dataset in ['ModelNet', '3D_FUTURE', 'KITTI', 'CRN']:
-#        args.split='train'
-    elif config.real_dataset in ['MatterPort','ScanNet','KITTI','PartNet']:
+    elif config.real_dataset in ['ModelNet', '3D_FUTURE', 'KITTI', 'CRN']:
+        args.split='train'
+    
+    if config.real_dataset in ['MatterPort','ScanNet','KITTI','PartNet']:
         dataset = RealDataset(config)
     elif config.real_dataset in ['ModelNet', '3D_FUTURE']:
         dataset = GeneratedDataset(config)
-        shuffle = config._base_.SPLIT == 'train' 
+        shuffle = config._base_.SPLIT == 'train'
     else:#if config.real_dataset in ['CRN']:
         dataset = build_dataset_from_cfg(config._base_, config.others) 
         shuffle = config._base_.SPLIT == 'train'   #判断为True

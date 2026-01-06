@@ -25,15 +25,15 @@ dataset : {
   train : { _base_: cfgs/dataset_configs/CRN.yaml, 
             others: {subset: 'train'},
             virtual_dataset: CRN,
-            real_dataset: 3D_FUTURE},
+            real_dataset: CRN},
   val : { _base_: cfgs/dataset_configs/CRN.yaml, 
             others: {subset: 'test'},
             virtual_dataset: CRN,
-            real_dataset: 3D_FUTURE},
+            real_dataset: CRN},
   test : { _base_: cfgs/dataset_configs/CRN.yaml, 
             others: {subset: 'test'},
             virtual_dataset: CRN,
-            real_dataset: 3D_FUTURE}}
+            real_dataset: CRN}}
 model : {
   NAME: DAPoinTr, 
   num_pred: 2048, 
@@ -46,10 +46,13 @@ model : {
   bounding: True,
   radius: 1.0
   }
-total_bs : 2
+total_bs : 1
 step_per_update : 1
 max_epoch : 60 #cabinet,sofa 100
 pre_train_epoch: 60 #cabinet,sofa 60
+bool_source_train: True
+bool_pseudo_label_train: False
+bool_model_train: True
 
 consider_metric: cd_l1
 consider_metric_2: CDL2

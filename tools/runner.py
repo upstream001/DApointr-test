@@ -170,14 +170,14 @@ def run_net(args, config, train_writer=None, val_writer=None):
                 source_dataset_name = config.dataset.train._base_.NAME
                 target_dataset_name = config.dataset.train.real_dataset
 
-                if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet']:
+                if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CRN']:
                     target_gt, target_partial, _ = target_data
                 if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['MatterPort', 'ScanNet', 'KITTI']:
                     target_partial, _ = target_data
                 if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name == 'CustomTarget':
                     target_gt, target_partial, _ = target_data
 
-                if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget']:
+                if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget', 'CRN']:
                     source_gt = source_gt.cuda()
                     source_partial = source_partial.cuda()
                     if config.dataset.train._base_.CLASS_CHOICE == "lamp" or config.dataset.train._base_.CLASS_CHOICE == "table":
@@ -321,14 +321,14 @@ def run_net(args, config, train_writer=None, val_writer=None):
                     source_dataset_name = config.dataset.train._base_.NAME
                     target_dataset_name = config.dataset.train.real_dataset
 
-                    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet']:
+                    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CRN']:
                         _, target_partial, _ = target_data  # [10,2048,3]
                     if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['MatterPort', 'ScanNet', 'KITTI']:
                         target_partial, _ = target_data
                     if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name == 'CustomTarget':
                         _, target_partial, _ = target_data  # [10,2048,3]
 
-                    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget']:
+                    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget', 'CRN']:
 
                         target_partial = target_partial.cuda()
                         _, relative_xyz, out_target = base_model(
@@ -530,7 +530,7 @@ def validate(base_model, real_test_dataloader, epoch, ChamferDisL1, ChamferDisL2
     source_dataset_name = config.dataset.train._base_.NAME
     target_dataset_name = config.dataset.train.real_dataset
     with torch.no_grad():
-        if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget']:
+        if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget', 'CRN']:
             for idx, data in enumerate(real_test_dataloader):
 
                 target_gt, target_partial, _ = data
@@ -630,7 +630,7 @@ def validate(base_model, real_test_dataloader, epoch, ChamferDisL1, ChamferDisL2
             val_writer.add_scalar('Metric/%s' %
                                   metric, test_metrics.avg(i), epoch)
 
-    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget']:
+    if source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget', 'CRN']:
         return Metrics(config.consider_metric_2, test_metrics.avg())
     elif source_dataset_name in ['CRNShapeNet', 'CustomSourceDataset'] and target_dataset_name in ['MatterPort', 'ScanNet', 'KITTI']:
         return Metrics(config.consider_metric_3, test_metrics.avg())
@@ -677,7 +677,7 @@ def test(base_model, test_dataloader, ChamferDisL1, ChamferDisL2, UnidirectionlC
 
             npoints = config.dataset.test._base_.N_POINTS
             dataset_name = config.dataset.test.real_dataset
-            if dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget']:
+            if dataset_name in ['3D_FUTURE', 'ModelNet', 'CustomTarget', 'CRN']:
                 partial = data[1].cuda()
                 gt = data[0].cuda()
 

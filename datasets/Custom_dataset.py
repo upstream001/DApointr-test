@@ -9,6 +9,17 @@ import torch
 from datasets.build import DATASETS
 
 
+def pc_normalize(pc):
+    """将点云归一化到单位球内 (Unit Sphere)"""
+    centroid = np.mean(pc, axis=0)
+    pc = pc - centroid
+    m = np.max(np.sqrt(np.sum(pc**2, axis=1)))
+    if m < 1e-6:
+        m = 1.0
+    pc /= m
+    return pc, centroid, m
+
+
 @DATASETS.register_module()
 class CustomSourceDataset(data.Dataset):
     """
@@ -80,10 +91,25 @@ class CustomSourceDataset(data.Dataset):
         # 确保输入和GT数据数量一致
         assert len(self.input_ls) == len(self.gt_ls), "输入数据和GT数据数量不一致"
 
+        # 归一化 (核心修改: 使用 GT 的中心和尺度对 Partial 和 GT 进行统一缩放)
+        # normalized_input = []
+        # normalized_gt = []
+        # for p_pcd, c_pcd in zip(self.input_ls, self.gt_ls):
+        #     # 以完整的 GT 为基准计算归一化参数
+        #     _, centroid, m = pc_normalize(c_pcd)
+        #     # 应用到两者
+        #     p_pcd = (p_pcd - centroid) / m
+        #     c_pcd = (c_pcd - centroid) / m
+        #     normalized_input.append(p_pcd)
+        #     normalized_gt.append(c_pcd)
+        
+        # self.input_ls = normalized_input
+        # self.gt_ls = normalized_gt
+
         # 对点云进行轴交换，统一坐标系
-        self.input_ls = [swap_axis(itm, swap_mode='210')
-                         for itm in self.input_ls]
-        self.gt_ls = [swap_axis(itm, swap_mode='210') for itm in self.gt_ls]
+        # self.input_ls = [swap_axis(itm, swap_mode='210')
+        #                  for itm in self.input_ls]
+        # self.gt_ls = [swap_axis(itm, swap_mode='210') for itm in self.gt_ls]
 
         print(f"成功加载 {len(self.input_ls)} 个数据样本")
 
@@ -133,10 +159,17 @@ class CustomTargetDataset(data.Dataset):
                     pcd = np.concatenate([pcd, pad_points], axis=0)
             self.input_ls.append(pcd.astype(np.float32))
 
+        # 归一化 (目标域没有 GT，则对自身进行归一化)
+        # normalized_input = []
+        # for pcd in self.input_ls:
+        #     pcd, _, _ = pc_normalize(pcd)
+        #     normalized_input.append(pcd)
+        # self.input_ls = normalized_input
+
         # 对点云进行轴交换，统一坐标系
-        input_ls_swapped = [swap_axis(itm, swap_mode='n210')
-                            for itm in self.input_ls]
-        self.input_ls = input_ls_swapped
+        # input_ls_swapped = [swap_axis(itm, swap_mode='210')
+        #                     for itm in self.input_ls]
+        # self.input_ls = input_ls_swapped
 
         print(f"目标域数据集加载了 {len(self.input_ls)} 个样本")
 

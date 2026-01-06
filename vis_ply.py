@@ -70,7 +70,7 @@ def visualize(file1, file2, offset=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PoinTr 项目点云对比可视化脚本")
     parser.add_argument("--file1", default="/home/tianqi/DAPoinTr/complete.ply", type=str, help="第一个点云文件路径 (.ply, .pcd, .npy)")
-    parser.add_argument("--file2", default="/home/tianqi/DAPoinTr/data/organized_source_dataset/sample_000/raw.ply", type=str, help="第二个点云文件路径 (.ply, .pcd, .npy)")
+    parser.add_argument("--file2", default="/home/tianqi/DAPoinTr/experiments/test_pointcloud/reconstruction.ply", type=str, help="第二个点云文件路径 (.ply, .pcd, .npy)")
     parser.add_argument("--offset", action="store_true", help="是否并排显示点云 (默认重叠显示)")
     
     args = parser.parse_args()

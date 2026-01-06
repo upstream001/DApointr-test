@@ -18,7 +18,7 @@ class CRNShapeNet(data.Dataset):
     Used for shape completion and pre-training tree-GAN
     """
     def __init__(self, config):
-        #self.args = args    #博涵数据集的配置选项，如数据集路径，类别选择和数据分割类型
+        #self.args = args    #包含数据集的配置选项，如数据集路径，类别选择和数据分割类型
         self.dataset_path = config.DATA_PATH #data/our_data
         self.class_choice = config.CLASS_CHOICE #chair
         self.split = config.SPLIT   #train
